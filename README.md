@@ -31,10 +31,14 @@ The issue may come from Docker in Windows, where the network is limited and this
 
 In order to solve that you can create tunnel to the NodeIP directly with minikube with the command:
 ```bash
-minikube service {name_of_your_service} --url
+minikube service {name_of_your_service} --url -n {namespace}
 ps -ef | grep docker@127.0.0.1
 ```
-Here name_of_your_service is **instant-search-service**.
+Here name_of_your_service is **instant-search-service** and namespace is **algolia-dev**.
+
+You can access your application web page with the result of the ps that will precise the port.
+
+Link will be **127.0.0.1:{port_found}**
 
 ## Kubectl
 We will also need Kubectl in order to control our Kubernetes cluster.

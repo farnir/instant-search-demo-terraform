@@ -1,0 +1,5 @@
+commonLabels:
+  app: my-wordpress
+resources:
+- instant-search-deploy.yaml
+- instant-search-service.yaml

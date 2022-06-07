@@ -27,6 +27,7 @@ You may have difficulties to access the Cluster IP of Kubernetes cluster and the
 The issue may come from Docker in Windows, where the network is limited and this Node IP is not reachable directly. In order to solve that you can create tunnel to the NodeIP directly with minikube with the command:
 ```bash
 minikube service {name_of_your_service} --url
+ps -ef | grep docker@127.0.0.1
 ```
 Here name_of_your_service is **search-app**.
 
@@ -38,4 +39,32 @@ For example with curl on linux, it will be:
 ```bash
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+
+## Terraform
+We will need the tool Terraform that will help us create the basic configuration of our cluster.
+The lastest version of Terraform is recommanded, you can find it [here](https://www.terraform.io/downloads)
+
+# How to setup
+Now that all our tools have been installed, we just need to initialize our cluster with Terraform.
+```bash
+cd terraform
+terraform init
+terraform apply
+```
+
+When the terraform is done, the setup is already over.
+We now have our application running on 2 pods on the cluster, and if a master branch of the repository is pushed and tagged correctly, a new image will be build and then deploy on our cluster.
+
+Congrats !
+
+# Cluster components
+In this cluster you will find ArgoCD that is handling the image deployment and the registry scan.
+To access the WebUI you can setup a ssh tunnel:
+```bash
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
+Also you can find the non encrypted password here:
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 ```

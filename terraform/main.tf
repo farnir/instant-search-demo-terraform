@@ -1,16 +1,21 @@
 terraform {
   required_providers {
     kubernetes = {
-      source = "hashiscorp/kubernetes"
-      version = ">= 2.0.0"
+      source = "hashicorp/kubernetes"
+      version = "2.11.0"
     }
-    # flux = {
-    #   source = "fluxcd/flux"
-    #   version = ">= 0.0.13"
-    # }
+
+    kubectl = {
+      source = "gavinbunney/kubectl"
+      version = "1.14.0"
+    }
   }
 }
 
 provider "kubernetes" {
+  config_path = "~/.kube/config"
+}
+
+provider "kubectl" {
   config_path = "~/.kube/config"
 }

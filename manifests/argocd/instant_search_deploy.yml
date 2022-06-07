@@ -6,6 +6,8 @@ metadata:
     argocd-image-updater.argoproj.io/search.update-strategy: latest
   name: instant-search
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:

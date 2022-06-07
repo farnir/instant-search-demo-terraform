@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: instant-search-deployment
+spec:
+  selector:
+    matchLabels:
+      run: instant-search
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: instant-search
+    spec:
+      containers:
+      - name: instant-search
+        image: ghcr.io/farnir/instant-search-demo:v1.0.2-dev
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: instant-search-service
+  labels:
+    run: instant-search
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+  type: NodePort
+  selector:
+    run: instant-search

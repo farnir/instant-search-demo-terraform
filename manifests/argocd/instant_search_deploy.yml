@@ -4,7 +4,6 @@ metadata:
   annotations:
     argocd-image-updater.argoproj.io/image-list: search=ghcr.io/farnir/instant-search-demo:~v1.0.2-dev
     argocd-image-updater.argoproj.io/search.update-strategy: latest
-    argocd-image-updater.argoproj.io/search.allow-tags: regexp:^v1.0.0-[0-9a-zA-Z]+$
   name: instant-search
   namespace: argocd
 spec:

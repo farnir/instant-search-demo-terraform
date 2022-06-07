@@ -29,7 +29,7 @@ The issue may come from Docker in Windows, where the network is limited and this
 minikube service {name_of_your_service} --url
 ps -ef | grep docker@127.0.0.1
 ```
-Here name_of_your_service is **search-app**.
+Here name_of_your_service is **instant-search-service**.
 
 ## Kubectl
 We will also need Kubectl in order to control our Kubernetes cluster.

@@ -19,3 +19,9 @@ provider "kubernetes" {
 provider "kubectl" {
   config_path = "~/.kube/config"
 }
+
+resource "kubernetes_namespace" "algolia_namespace" {
+  metadata {
+    name = "algolia-dev"
+  }
+}

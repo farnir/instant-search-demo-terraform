@@ -18,3 +18,10 @@ spec:
         image: ghcr.io/farnir/instant-search-demo:v1.0.2-dev
         ports:
         - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            port: 3000
+            path: /
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 10

@@ -1,6 +1,6 @@
 resource "kubernetes_namespace" "argocd_namespace" {
   metadata {
-    name = "argocd"
+    name = var.argocd_namespace
   }
 }
 
@@ -12,9 +12,9 @@ resource "kubectl_manifest" "argocd" {
   depends_on = [
     kubernetes_namespace.argocd_namespace
   ]
-  count     = length(data.kubectl_file_documents.argocd_install.documents)
-  yaml_body = element(data.kubectl_file_documents.argocd_install.documents, count.index)
-  override_namespace = "argocd"
+  for_each  = data.kubectl_file_documents.argocd_install.manifests
+  yaml_body = each.value
+  override_namespace = var.argocd_namespace
 }
 
 data "kubectl_file_documents" "argocd_install_image_update" {
@@ -25,20 +25,28 @@ resource "kubectl_manifest" "argocd_image_update" {
   depends_on = [
     kubernetes_namespace.argocd_namespace
   ]
-  count     = length(data.kubectl_file_documents.argocd_install_image_update.documents)
-  yaml_body = element(data.kubectl_file_documents.argocd_install_image_update.documents, count.index)
-  override_namespace = "argocd"
+  for_each  = data.kubectl_file_documents.argocd_install_image_update.manifests
+  yaml_body = each.value
+  override_namespace = var.argocd_namespace
 }
 
-data "kubectl_file_documents" "instant-search-app" {
-    content = file("../manifests/argocd/instant_search_deploy.yml")
+data "template_file" "instant-search-app" {
+  template = file("../manifests/argocd/application_template.yml")
+  vars = {
+    MANIFEST_REPOSITORY       = var.manifest_repository
+    MANIFEST_PATH             = var.manifest_path
+    DEFAULT_IMAGE             = var.default_image
+    APPLICATION_NAME          = var.app_name
+    ARGOCD_NAMESPACE          = var.argocd_namespace
+    UPDATE_STRATEGY           = "latest"
+    TARGET_REVISION           = "HEAD"
+  }
 }
 
 resource "kubectl_manifest" "instant-search-app" {
     depends_on = [
       kubectl_manifest.argocd,
     ]
-    count     = length(data.kubectl_file_documents.instant-search-app.documents)
-    yaml_body = element(data.kubectl_file_documents.instant-search-app.documents, count.index)
-    override_namespace = "argocd"
+    yaml_body = data.template_file.instant-search-app.rendered
+    override_namespace = var.argocd_namespace
 }

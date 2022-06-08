@@ -22,6 +22,6 @@ provider "kubectl" {
 
 resource "kubernetes_namespace" "algolia_namespace" {
   metadata {
-    name = "algolia-dev"
+    name = var.app_namespace
   }
 }

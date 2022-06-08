@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: app=${DEFAULT_IMAGE}
+    argocd-image-updater.argoproj.io/app.update-strategy: ${UPDATE_STRATEGY}
+  name: ${APPLICATION_NAME}
+  namespace: ${ARGOCD_NAMESPACE}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: ${MANIFEST_REPOSITORY}
+    targetRevision: ${TARGET_REVISION}
+    path: ${MANIFEST_PATH}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      selfHeal: true
